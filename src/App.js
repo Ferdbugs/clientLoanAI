@@ -1,12 +1,12 @@
-import Content from "./components/Content";
-import React from "react";
+import React from "react"
+import Table from "./view/Table"
 
 function App() {
   return (
     <>
-      <Content />
+      <Table />
     </>
-  );
+  )
 }
 
-export default App;
+export default App

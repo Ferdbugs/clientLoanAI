@@ -1,72 +1,75 @@
-import React, { Component } from "react";
+import React, { Component } from "react"
 
 export default class Content extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       data: [],
       isLoaded: 0,
-    };
+    }
+    this.props.loadData()
   }
+
   getData() {
-    this.setState({ isLoaded: 1 });
-    fetch("http://universities.hipolabs.com/search?country=Australia")
-      .then((res) => res.json())
-      .then((json) => {
-        this.setState({
-          isLoaded: 2,
-          data: json,
-        });
+    if (this.state.isLoaded != 2) {
+      this.setState({ isLoaded: 1 })
+      this.setState({ data: this.props.tableData, isLoaded: 2 })
+    } else {
+      this.props.loadData().then(() => {
+        this.setState({ data: this.props.tableData })
       })
-      .catch((err) => {
-        console.log(err);
-      });
+    }
   }
 
   deleteData() {
-    this.setState(this.state.data.splice(this.state.data.length - 1, 1));
+    this.props.deleteData(this.state.data)
+    this.setState({ data: this.props.tableData })
   }
 
   addData() {
-    this.setState({ data: [...this.state.data, this.state.data[0]] });
+    this.props.addData(this.state.data)
+    this.setState({ data: this.props.tableData })
   }
 
   render() {
-    var { isLoaded, data } = this.state;
-
-    var tableData = data.map((item) => {
-      return (
-        <tr
-          key={item.domains}
-          className="cursor-pointer hover:scale-[1.008] ease-in duration-200 hover:bg-slate-100"
-        >
-          <td className="p-2 whitespace-nowrap">
-            <div className="flex items-center">
-              <div className="font-medium text-gray-800">
-                {item.alpha_two_code}
+    var { isLoaded, data } = this.state
+    var tableData = data ? (
+      data.map((item) => {
+        return (
+          <tr
+            key={item.name}
+            className="cursor-pointer hover:scale-[1.008] ease-in duration-200 hover:bg-slate-100"
+          >
+            <td className="p-2 whitespace-nowrap">
+              <div className="flex items-center">
+                <div className="font-medium text-gray-800">
+                  {item.alpha_two_code}
+                </div>
               </div>
-            </div>
-          </td>
-          <td className="p-2 w-fit">
-            <div className="text-left">{item.country}</div>
-          </td>
-          <td className="p-2 w-fit">
-            <div className="text-left font-medium text-green-500">
-              {item.domains}
-            </div>
-          </td>
-          <td className="p-2 w-fit whitespace-nowrap">
-            <div className="text-left">{item.name}</div>
-          </td>
-          <td className="p-2 w-fit whitespace-nowrap text-blue-500">
-            <div className="text-left">{item.web_pages}</div>
-          </td>
-          <td className="p-2 w-fit whitespace-nowrap">
-            <div className="text-left">{item.stateProvince}</div>
-          </td>
-        </tr>
-      );
-    });
+            </td>
+            <td className="p-2 w-fit">
+              <div className="text-left">{item.country}</div>
+            </td>
+            <td className="p-2 w-fit">
+              <div className="text-left font-medium text-green-500">
+                {item.domains}
+              </div>
+            </td>
+            <td className="p-2 w-fit whitespace-nowrap">
+              <div className="text-left">{item.name}</div>
+            </td>
+            <td className="p-2 w-fit whitespace-nowrap text-blue-500">
+              <div className="text-left">{item.web_pages}</div>
+            </td>
+            <td className="p-2 w-fit whitespace-nowrap">
+              <div className="text-left">{item.stateProvince}</div>
+            </td>
+          </tr>
+        )
+      })
+    ) : (
+      <div>No Data</div>
+    )
 
     return (
       <div className="antialiased bg-gray-100 text-gray-600 w-full h-screen">
@@ -84,7 +87,7 @@ export default class Content extends Component {
                     onClick={() => this.getData()}
                     className="w-fit p-2 px-4 mr-2 text-gray-100 font-semibold hover:scale-105 ease-in duration-300"
                   >
-                    Load
+                    {isLoaded == 0 ? "Load" : "Refresh"}
                   </button>
                   <button
                     onClick={() => this.addData()}
@@ -134,9 +137,9 @@ export default class Content extends Component {
                     </tr>
                   </thead>
                   <tbody className="text-sm divide-y divide-gray-100 overflow-visible">
-                    {isLoaded == 0 ? (
+                    {isLoaded === 0 ? (
                       <tr></tr>
-                    ) : isLoaded == 1 ? (
+                    ) : isLoaded === 1 ? (
                       <tr>
                         <td>Loading...</td>
                       </tr>
@@ -150,6 +153,6 @@ export default class Content extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
