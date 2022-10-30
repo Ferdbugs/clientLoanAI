@@ -84,20 +84,26 @@ export default class Content extends Component {
                 </div>
                 <div>
                   <button
+                    data-mdb-ripple="true"
+                    data-mdb-ripple-color="secondary"
                     onClick={() => this.getData()}
-                    className="w-fit p-2 px-4 mr-2 text-gray-100 font-semibold hover:scale-105 ease-in duration-300"
+                    className="w-fit p-2 px-4 mr-2 text-gray-100 font-semibold hover:scale-105 ease-in duration-300 active:opacity-0"
                   >
                     {isLoaded == 0 ? "Load" : "Refresh"}
                   </button>
                   <button
+                    data-mdb-ripple="true"
+                    data-mdb-ripple-color="secondary"
                     onClick={() => this.addData()}
-                    className="w-fit p-2 px-4 mr-2 text-gray-100 font-semibold hover:scale-105 ease-in duration-300"
+                    className="w-fit p-2 px-4 mr-2 text-gray-100 font-semibold hover:scale-105 ease-in duration-300 active:opacity-0"
                   >
                     Add
                   </button>
                   <button
+                    data-mdb-ripple="true"
+                    data-mdb-ripple-color="secondary"
                     onClick={() => this.deleteData()}
-                    className="w-fit p-2 px-4 mr-2 text-gray-100 font-semibold hover:scale-105 ease-in duration-300"
+                    className="w-fit p-2 px-4 mr-2 text-gray-100 font-semibold hover:scale-105 ease-in duration-300 active:opacity-0"
                   >
                     Delete
                   </button>
