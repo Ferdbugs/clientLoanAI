@@ -11,6 +11,9 @@ export function loadData() {
         data = response.data
         dispatch({ type: "GET", data: response.data })
       })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 }
 
