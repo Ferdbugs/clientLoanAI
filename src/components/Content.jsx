@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import Pagination from "./Pagination"
 
 export default class Content extends Component {
   constructor(props) {
@@ -6,6 +7,8 @@ export default class Content extends Component {
     this.state = {
       data: [],
       isLoaded: 0,
+      currentPage: 1,
+      rowsPerPage: 15,
     }
     this.props.loadData()
   }
@@ -31,10 +34,18 @@ export default class Content extends Component {
     this.setState({ data: this.props.tableData })
   }
 
+  paginate = (pageNumber) => {
+    this.setState({ currentPage: pageNumber })
+  }
+
   render() {
-    var { isLoaded, data } = this.state
-    var tableData = data ? (
-      data.map((item) => {
+    var { isLoaded, data, currentPage, rowsPerPage } = this.state
+    var indexOfLastRow = currentPage * rowsPerPage
+    var indexOfFirstRow = indexOfLastRow - rowsPerPage
+    var currentPosts = data.slice(indexOfFirstRow, indexOfLastRow)
+
+    var tableData = currentPosts ? (
+      currentPosts.map((item) => {
         return (
           <tr
             key={item.name}
@@ -51,15 +62,31 @@ export default class Content extends Component {
               <div className="text-left">{item.country}</div>
             </td>
             <td className="p-2 w-fit">
-              <div className="text-left font-medium text-green-500">
-                {item.domains}
-              </div>
+              {(() => {
+                let domains = []
+                for (let i = 0; i < item.domains.length; i++) {
+                  domains.push(
+                    <div className="text-left font-medium text-green-500">
+                      {item.domains[i]}
+                    </div>
+                  )
+                }
+                return domains
+              })()}
             </td>
             <td className="p-2 w-fit whitespace-nowrap">
               <div className="text-left">{item.name}</div>
             </td>
             <td className="p-2 w-fit whitespace-nowrap text-blue-500">
-              <div className="text-left">{item.web_pages}</div>
+              {(() => {
+                let pages = []
+                for (let i = 0; i < item.web_pages.length; i++) {
+                  pages.push(
+                    <div className="text-left">{item.web_pages[i]}</div>
+                  )
+                }
+                return pages
+              })()}
             </td>
             <td className="p-2 w-fit whitespace-nowrap">
               <div className="text-left">{item.stateProvince}</div>
@@ -87,7 +114,7 @@ export default class Content extends Component {
                     data-mdb-ripple="true"
                     data-mdb-ripple-color="secondary"
                     onClick={() => this.getData()}
-                    className="w-fit p-2 px-4 mr-2 text-gray-100 font-semibold hover:scale-105 ease-in duration-300 active:opacity-0"
+                    className="w-fit p-2 px-4 mr-2 text-gray-100 font-semibold hover:scale-105 ease-in duration-300 active:opacity-0 active:translate-y-4"
                   >
                     {isLoaded == 0 ? "Load" : "Refresh"}
                   </button>
@@ -95,7 +122,7 @@ export default class Content extends Component {
                     data-mdb-ripple="true"
                     data-mdb-ripple-color="secondary"
                     onClick={() => this.addData()}
-                    className="w-fit p-2 px-4 mr-2 text-gray-100 font-semibold hover:scale-105 ease-in duration-300 active:opacity-0"
+                    className="w-fit p-2 px-4 mr-2 text-gray-100 font-semibold hover:scale-105 ease-in duration-300 active:opacity-0 active:translate-y-4"
                   >
                     Add
                   </button>
@@ -103,7 +130,7 @@ export default class Content extends Component {
                     data-mdb-ripple="true"
                     data-mdb-ripple-color="secondary"
                     onClick={() => this.deleteData()}
-                    className="w-fit p-2 px-4 mr-2 text-gray-100 font-semibold hover:scale-105 ease-in duration-300 active:opacity-0"
+                    className="w-fit p-2 px-4 mr-2 text-gray-100 font-semibold hover:scale-105 ease-in duration-300 active:opacity-0 active:translate-y-4"
                   >
                     Delete
                   </button>
@@ -154,6 +181,23 @@ export default class Content extends Component {
                     )}
                   </tbody>
                 </table>
+                <div className="flex flex-row w-full justify-end my-4">
+                  {isLoaded === 2 ? (
+                    <div className="flex">
+                      <p className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-[#7d51e5] to-[#709dff] py-2 px-2">
+                        Showing results {(currentPage - 1) * rowsPerPage + 1} to{" "}
+                        {currentPage * rowsPerPage}:
+                      </p>
+                      <Pagination
+                        rowsPerPage={rowsPerPage}
+                        totalRows={data.length}
+                        paginate={this.paginate}
+                      />{" "}
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                </div>
               </div>
             </div>
           </div>
