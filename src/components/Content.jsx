@@ -43,6 +43,15 @@ export default class Content extends Component {
     var indexOfLastRow = currentPage * rowsPerPage
     var indexOfFirstRow = indexOfLastRow - rowsPerPage
     var currentPosts = data.slice(indexOfFirstRow, indexOfLastRow)
+    var fromRec = (currentPage - 1) * rowsPerPage + 1
+    var toRec = data.length
+
+    if (rowsPerPage < data.length) {
+      toRec = rowsPerPage * currentPage
+      if (toRec > data.length) {
+        toRec = data.length
+      }
+    }
 
     var tableData = currentPosts ? (
       currentPosts.map((item) => {
@@ -185,8 +194,7 @@ export default class Content extends Component {
                   {isLoaded === 2 ? (
                     <div className="flex">
                       <p className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-[#7d51e5] to-[#709dff] py-2 px-2">
-                        Showing results {(currentPage - 1) * rowsPerPage + 1} to{" "}
-                        {currentPage * rowsPerPage}:
+                        Showing results {fromRec} to {toRec}:
                       </p>
                       <Pagination
                         rowsPerPage={rowsPerPage}
