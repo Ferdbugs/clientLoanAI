@@ -54,10 +54,10 @@ export default class Content extends Component {
     }
 
     var tableData = currentPosts ? (
-      currentPosts.map((item) => {
+      currentPosts.map((item, index) => {
         return (
           <tr
-            key={item.name}
+            key={index}
             className="cursor-pointer hover:scale-[1.008] ease-in duration-200 hover:bg-slate-100"
           >
             <td className="p-2 whitespace-nowrap">
